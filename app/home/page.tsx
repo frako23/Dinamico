@@ -8,9 +8,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { cn } from "@/lib/utils"
 import { useStore } from "@/lib/store"
 import { formatCurrency, monthLabel, startOfMonth, endOfMonth, addMonths } from "@/lib/format"
-import { TransactionsList } from "./transactions-list"
-import { AddTransaction } from "./transaction-add"
-import { BottomNav } from "./navigation-bottom"
+import { TransactionsList } from "../../components/transactions-list"
+import { AddTransaction } from "../../components/transaction-add"
+import { BottomNav } from "../../components/navigation-bottom"
 
 export default function HomePage() {
   const [openAdd, setOpenAdd] = useState(false)

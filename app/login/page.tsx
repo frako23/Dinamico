@@ -1,10 +1,17 @@
-"use client"
+"use client";
 
-import Link from "next/link"
-import Image from "next/image"
-import { Chrome, Wallet, ChevronRight } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardFooter, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
+import Link from "next/link";
+import Image from "next/image";
+import { Chrome, Wallet, ChevronRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
 
 export default function LoginPage() {
   return (
@@ -18,9 +25,12 @@ export default function LoginPage() {
             </div>
             <span className="text-2xl font-bold tracking-tight">Dinámico</span>
           </div>
-          <h1 className="mt-6 text-4xl font-semibold leading-tight">Controla tus gastos de forma simple y rápida</h1>
+          <h1 className="mt-6 text-4xl font-semibold leading-tight">
+            Controla tus gastos de forma simple y rápida
+          </h1>
           <p className="mt-3 text-muted-foreground">
-            Registra ingresos y gastos, visualiza reportes y toma mejores decisiones financieras.
+            Registra ingresos y gastos, visualiza reportes y toma mejores
+            decisiones financieras.
           </p>
           <div className="mt-10 relative aspect-[4/3] w-full overflow-hidden rounded-xl border bg-white">
             <Image
@@ -38,7 +48,9 @@ export default function LoginPage() {
           <Card className="w-full max-w-md">
             <CardHeader className="space-y-1">
               <CardTitle className="text-2xl">Inicia sesión</CardTitle>
-              <CardDescription>Accede para sincronizar tus datos en dispositivos.</CardDescription>
+              <CardDescription>
+                Accede para sincronizar tus datos en dispositivos.
+              </CardDescription>
             </CardHeader>
             <CardContent className="grid gap-4">
               {/* Google OAuth button (UI only) */}
@@ -47,7 +59,7 @@ export default function LoginPage() {
                 variant="outline"
                 className="h-11 w-full justify-center gap-2 bg-transparent"
                 onClick={(e) => {
-                  e.preventDefault()
+                  e.preventDefault();
                   // Sin lógica OAuth: solo UI
                 }}
                 aria-label="Continuar con Google"
@@ -61,12 +73,17 @@ export default function LoginPage() {
                   <span className="w-full border-t" />
                 </div>
                 <div className="relative flex justify-center text-xs uppercase">
-                  <span className="bg-background px-2 text-muted-foreground">o</span>
+                  <span className="bg-background px-2 text-muted-foreground">
+                    o
+                  </span>
                 </div>
               </div>
 
-              <Button asChild className="h-11 bg-emerald-600 hover:bg-emerald-700">
-                <Link href="/">
+              <Button
+                asChild
+                className="h-11 bg-emerald-600 hover:bg-emerald-700"
+              >
+                <Link href="/home">
                   Probar como invitado
                   <ChevronRight className="ml-1.5 h-4 w-4" />
                 </Link>
@@ -98,5 +115,5 @@ export default function LoginPage() {
         </section>
       </div>
     </main>
-  )
+  );
 }
