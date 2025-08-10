@@ -1,17 +1,17 @@
 "use client";
 
-import Link from "next/link";
+// import Link from "next/link";
 import Image from "next/image";
 import { Chrome, Wallet, ChevronRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-} from "@/components/ui/card";
+// import { Button } from "@/components/ui/button";
+// import {
+//   Card,
+//   CardContent,
+//   CardFooter,
+//   CardHeader,
+//   CardTitle,
+//   CardDescription,
+// } from "@/components/ui/card";
 import OneTapComponent from "@/components/OneTapComponent";
 import { createClientInstance } from "@/utils/supabase/client";
 
@@ -28,7 +28,7 @@ export default function LoginPage() {
 
   return (
     <main className="min-h-[100svh] bg-gradient-to-b from-emerald-50 to-white">
-      <div className="mx-auto max-w-6xl grid grid-cols-1 md:grid-cols-2 gap-8 px-4 py-8 md:py-16">
+      <div className="mx-auto max-w-lg grid grid-cols-1 gap-8 px-4 py-8 md:py-16">
         {/* Left side: Brand and illustration */}
         <section className="hidden md:flex flex-col justify-center">
           <div className="flex items-center gap-2 text-emerald-700">
@@ -56,7 +56,7 @@ export default function LoginPage() {
         </section>
 
         {/* Right side: Login card */}
-        <section className="flex items-center justify-center">
+        {/* <section className="flex items-center justify-center">
           <Card className="w-full max-w-md">
             <CardHeader className="space-y-1">
               <CardTitle className="text-2xl">Inicia sesión</CardTitle>
@@ -65,7 +65,6 @@ export default function LoginPage() {
               </CardDescription>
             </CardHeader>
             <CardContent className="grid gap-4">
-              {/* Google OAuth button (UI only) */}
               <Button
                 type="button"
                 variant="outline"
@@ -78,7 +77,6 @@ export default function LoginPage() {
               >
                 <Chrome className="h-5 w-5" />
                 <span>Continuar con Google</span>
-                <OneTapComponent />
               </Button>
 
               <div className="relative my-2">
@@ -125,8 +123,9 @@ export default function LoginPage() {
               <p>La autenticación de Google se añadirá más adelante.</p>
             </CardFooter>
           </Card>
-        </section>
+        </section> */}
       </div>
+      <OneTapComponent />
     </main>
   );
 }

@@ -36,6 +36,10 @@ const generateNonce = async (): Promise<[string, string]> => {
   return [nonce, hashedNonce];
 };
 
+if (!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+  console.warn("Supabase key missing. OneTapComponent will not render.");
+}
+
 const OneTapComponent = () => {
   const supabase = createClientInstance();
   const router = useRouter();
@@ -46,7 +50,7 @@ const OneTapComponent = () => {
       console.error("Error getting session", error);
     }
     if (data.session) {
-      router.push("/home");
+      router.push("/");
       return;
     }
     google.accounts.id.initialize({
@@ -75,8 +79,6 @@ const OneTapComponent = () => {
         void initializeGoogleOneTap();
       }}
       src="https://accounts.google.com/gsi/client"
-      async
-      defer
     />
   );
 };
