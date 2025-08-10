@@ -12,8 +12,20 @@ import {
   CardTitle,
   CardDescription,
 } from "@/components/ui/card";
+import OneTapComponent from "@/components/OneTapComponent";
+import { createClientInstance } from "@/utils/supabase/client";
 
 export default function LoginPage() {
+  const handleGoogleLogin = async () => {
+    const supabase = createClientInstance();
+    await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        redirectTo: window.location.origin, // o la ruta que desees después del login
+      },
+    });
+  };
+
   return (
     <main className="min-h-[100svh] bg-gradient-to-b from-emerald-50 to-white">
       <div className="mx-auto max-w-6xl grid grid-cols-1 md:grid-cols-2 gap-8 px-4 py-8 md:py-16">
@@ -57,15 +69,16 @@ export default function LoginPage() {
               <Button
                 type="button"
                 variant="outline"
-                className="h-11 w-full justify-center gap-2 bg-transparent"
+                className="h-11 w-full justify-center gap-2 bg-transparent cursor-pointer hover:bg-emerald-50"
                 onClick={(e) => {
                   e.preventDefault();
-                  // Sin lógica OAuth: solo UI
+                  handleGoogleLogin();
                 }}
                 aria-label="Continuar con Google"
               >
                 <Chrome className="h-5 w-5" />
                 <span>Continuar con Google</span>
+                <OneTapComponent />
               </Button>
 
               <div className="relative my-2">

@@ -9,6 +9,7 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
-}
+  allowedDevOrigins: ["https://accounts.google.com"],
+};
 
-export default nextConfig
+export default nextConfig;
