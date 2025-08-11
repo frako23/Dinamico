@@ -1,7 +1,13 @@
-import { type NextRequest } from 'next/server'
-import { updateSession } from '@/utils/supabase/middleware'
+import { NextResponse, type NextRequest } from 'next/server'
+import { getUser, updateSession } from '@/utils/supabase/middleware'
 
-export async function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest, response: NextResponse) {
+    const protectedRoutes = ['/home']
+    const path = new URL(request.url).pathname
+    const { data: { user } } = await getUser(request, response)
+    if (protectedRoutes.includes(path) && !user) {
+        return NextResponse.redirect(new URL('/login', request.url))
+    }
     return await updateSession(request)
 }
 
