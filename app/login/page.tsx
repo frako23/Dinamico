@@ -14,6 +14,7 @@ import { Chrome, Wallet, ChevronRight } from "lucide-react";
 // } from "@/components/ui/card";
 import OneTapComponent from "@/components/OneTapComponent";
 import { createClientInstance } from "@/utils/supabase/client";
+import { useEffect } from "react";
 
 export default function LoginPage() {
   const handleGoogleLogin = async () => {
@@ -25,6 +26,12 @@ export default function LoginPage() {
       },
     });
   };
+
+  useEffect(() => {
+    if (localStorage.getItem("sb-dxadiltwtrkdfwernksp-auth-token")) {
+      window.location.href = "/home";
+    }
+  }, []);
 
   return (
     <main className="min-h-[100svh] bg-gradient-to-b from-emerald-50 to-white">
