@@ -1,42 +1,70 @@
 "use client";
 
-// import Link from "next/link";
-import Image from "next/image";
-import { Chrome, Wallet, ChevronRight } from "lucide-react";
-// import { Button } from "@/components/ui/button";
-// import {
-//   Card,
-//   CardContent,
-//   CardFooter,
-//   CardHeader,
-//   CardTitle,
-//   CardDescription,
-// } from "@/components/ui/card";
-import OneTapComponent from "@/components/OneTapComponent";
-import { createClientInstance } from "@/utils/supabase/client";
 import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { supabase } from "@/utils/supabase/client";
+import OneTapComponent from "@/components/OneTapComponent";
+import Image from "next/image";
+import { Wallet } from "lucide-react";
+import { User } from "@supabase/supabase-js";
 
 export default function LoginPage() {
-  const handleGoogleLogin = async () => {
-    const supabase = createClientInstance();
-    await supabase.auth.signInWithOAuth({
-      provider: "google",
-      options: {
-        redirectTo: window.location.origin, // o la ruta que desees después del login
-      },
-    });
-  };
+  const router = useRouter();
+  async function ensureProfileExists(user: User) {
+    const { data: existingProfile, error } = await supabase
+      .from("profiles")
+      .select("id")
+      .eq("id", user.id)
+      .single();
+
+    if (!existingProfile && !error) {
+      const { error: insertError } = await supabase.from("profiles").insert([
+        {
+          id: user.id,
+          email: user.email,
+          created_at: new Date().toISOString(),
+          // Puedes agregar más campos si tu tabla los requiere
+        },
+      ]);
+
+      if (insertError) {
+        console.error("Error al insertar perfil:", insertError.message);
+      } else {
+        console.log("Perfil creado exitosamente");
+      }
+    }
+  }
 
   useEffect(() => {
-    if (localStorage.getItem("sb-dxadiltwtrkdfwernksp-auth-token")) {
-      window.location.href = "/home";
-    }
-  }, []);
+    // Redirección si ya hay sesión activa
+    supabase.auth.getSession().then(async ({ data }) => {
+      const session = data.session;
+      if (session) {
+        await ensureProfileExists(session.user);
+        router.push("/home");
+      }
+    });
+
+    // Escuchar cambios de sesión
+    const { data: authListener } = supabase.auth.onAuthStateChange(
+      async (event, session) => {
+        if (event === "SIGNED_IN" && session?.user) {
+          console.log("Usuario autenticado:", session);
+          await ensureProfileExists(session.user);
+          router.push("/home");
+        }
+      }
+    );
+
+    return () => {
+      authListener?.subscription.unsubscribe();
+    };
+  }, [router]);
 
   return (
     <main className="min-h-[100svh] bg-gradient-to-b from-emerald-50 to-white">
       <div className="mx-auto max-w-lg grid grid-cols-1 gap-8 px-4 py-8 md:py-16">
-        {/* Left side: Brand and illustration */}
+        {/* Branding */}
         <section className="hidden md:flex flex-col justify-center">
           <div className="flex items-center gap-2 text-emerald-700">
             <div className="h-9 w-9 rounded-lg bg-emerald-600/10 flex items-center justify-center">
@@ -61,76 +89,6 @@ export default function LoginPage() {
             />
           </div>
         </section>
-
-        {/* Right side: Login card */}
-        {/* <section className="flex items-center justify-center">
-          <Card className="w-full max-w-md">
-            <CardHeader className="space-y-1">
-              <CardTitle className="text-2xl">Inicia sesión</CardTitle>
-              <CardDescription>
-                Accede para sincronizar tus datos en dispositivos.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="grid gap-4">
-              <Button
-                type="button"
-                variant="outline"
-                className="h-11 w-full justify-center gap-2 bg-transparent cursor-pointer hover:bg-emerald-50"
-                onClick={(e) => {
-                  e.preventDefault();
-                  handleGoogleLogin();
-                }}
-                aria-label="Continuar con Google"
-              >
-                <Chrome className="h-5 w-5" />
-                <span>Continuar con Google</span>
-              </Button>
-
-              <div className="relative my-2">
-                <div className="absolute inset-0 flex items-center">
-                  <span className="w-full border-t" />
-                </div>
-                <div className="relative flex justify-center text-xs uppercase">
-                  <span className="bg-background px-2 text-muted-foreground">
-                    o
-                  </span>
-                </div>
-              </div>
-
-              <Button
-                asChild
-                className="h-11 bg-emerald-600 hover:bg-emerald-700"
-              >
-                <Link href="/home">
-                  Probar como invitado
-                  <ChevronRight className="ml-1.5 h-4 w-4" />
-                </Link>
-              </Button>
-            </CardContent>
-            <CardFooter className="flex flex-col items-start gap-2 text-xs text-muted-foreground">
-              <p>
-                Al continuar, aceptas nuestros{" "}
-                <a
-                  className="underline underline-offset-2 hover:text-foreground"
-                  href="#"
-                  onClick={(e) => e.preventDefault()}
-                >
-                  Términos
-                </a>{" "}
-                y{" "}
-                <a
-                  className="underline underline-offset-2 hover:text-foreground"
-                  href="#"
-                  onClick={(e) => e.preventDefault()}
-                >
-                  Política de privacidad
-                </a>
-                .
-              </p>
-              <p>La autenticación de Google se añadirá más adelante.</p>
-            </CardFooter>
-          </Card>
-        </section> */}
       </div>
       <OneTapComponent />
     </main>
