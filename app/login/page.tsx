@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { supabase } from "@/utils/supabase/client";
+import { supabase } from "@/app/utils/supabase/client";
 import OneTapComponent from "@/components/OneTapComponent";
 import Image from "next/image";
 import { Wallet } from "lucide-react";
@@ -50,6 +50,24 @@ export default function LoginPage() {
       async (event, session) => {
         if (event === "SIGNED_IN" && session?.user) {
           console.log("Usuario autenticado:", session);
+          const user = session?.user;
+          if (user) {
+            const { data, error } = await supabase
+              .from("profiles")
+              .select("id")
+              .eq("id", user.id)
+              .single();
+
+            if (!data && !error) {
+              await supabase.from("profiles").insert({
+                id: user.id,
+                username: user.user_metadata?.name || user.email,
+                avatar_url: user.user_metadata?.avatar_url || "",
+                full_name: user.user_metadata?.full_name || "",
+              });
+            }
+          }
+          console.log("Sesión iniciada:", session);
           await ensureProfileExists(session.user);
           router.push("/home");
         }
