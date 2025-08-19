@@ -8,7 +8,7 @@ export async function updateSession(request: NextRequest) {
 
     const supabase = createServerClient(
         process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+        process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!,
         {
             cookies: {
                 getAll() {
@@ -27,19 +27,21 @@ export async function updateSession(request: NextRequest) {
         }
     )
 
-    // IMPORTANT: Avoid writing any logic between createServerClient and
-    // supabase.auth.getClaims(). A simple mistake could make it very hard to debug
+    // Do not run code between createServerClient and
+    // supabase.auth.getUser(). A simple mistake could make it very hard to debug
     // issues with users being randomly logged out.
 
-    // IMPORTANT: Don't remove getClaims()
-    const { data } = await supabase.auth.getClaims()
+    // IMPORTANT: DO NOT REMOVE auth.getUser()
 
-    const user = data?.claims
+    const {
+        data: { user },
+    } = await supabase.auth.getUser()
 
     if (
         !user &&
         !request.nextUrl.pathname.startsWith('/login') &&
-        !request.nextUrl.pathname.startsWith('/auth')
+        !request.nextUrl.pathname.startsWith('/auth') &&
+        !request.nextUrl.pathname.startsWith('/error')
     ) {
         // no user, potentially respond by redirecting the user to the login page
         const url = request.nextUrl.clone()
@@ -47,8 +49,8 @@ export async function updateSession(request: NextRequest) {
         return NextResponse.redirect(url)
     }
 
-    // IMPORTANT: You *must* return the supabaseResponse object as it is. If you're
-    // creating a new response object with NextResponse.next() make sure to:
+    // IMPORTANT: You *must* return the supabaseResponse object as it is.
+    // If you're creating a new response object with NextResponse.next() make sure to:
     // 1. Pass the request in it, like so:
     //    const myNewResponse = NextResponse.next({ request })
     // 2. Copy over the cookies, like so:
@@ -61,31 +63,4 @@ export async function updateSession(request: NextRequest) {
     // of sync and terminate the user's session prematurely!
 
     return supabaseResponse
-}
-
-/* --------------- FUNCIÓN PARA OBTENER LA SESIÓN DEL USUARIO --------------- */
-export async function getUser(request: NextRequest, response: NextResponse) {
-
-    const supabase = createServerClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-        {
-            cookies: {
-                getAll() {
-                    return request.cookies.getAll()
-                },
-                setAll(cookiesToSet) {
-                    cookiesToSet.forEach(({ name, value, options }) => request.cookies.set(name, value))
-                    response = NextResponse.next({
-                        request,
-                    })
-                    cookiesToSet.forEach(({ name, value, options }) =>
-                        response.cookies.set(name, value, options)
-                    )
-                },
-            },
-        }
-    )
-
-    return supabase.auth.getUser()
 }

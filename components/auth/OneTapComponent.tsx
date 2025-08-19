@@ -2,12 +2,26 @@
 
 import Script from "next/script";
 import { createClient } from "@/utils/supabase/client";
-import type { accounts, CredentialResponse } from "google-one-tap";
 import { useRouter } from "next/navigation";
 
-declare const google: { accounts: accounts };
+// Define the type for google.accounts if needed:
+type GoogleAccounts = {
+  id: {
+    initialize: (options: any) => void;
+    prompt: () => void;
+  };
+};
 
-// generate nonce to use for google id token sign-in
+// Declare google with the correct type:
+declare const google: { accounts: GoogleAccounts };
+
+// Define CredentialResponse type based on Google One Tap documentation
+type CredentialResponse = {
+  credential: string;
+  select_by?: string;
+  clientId?: string;
+};
+
 const generateNonce = async (): Promise<string[]> => {
   const nonce = btoa(
     String.fromCharCode(...crypto.getRandomValues(new Uint8Array(32)))
@@ -73,7 +87,9 @@ const OneTapComponent = () => {
 
   return (
     <Script
-      onReady={initializeGoogleOneTap}
+      onReady={() => {
+        void initializeGoogleOneTap();
+      }}
       src="https://accounts.google.com/gsi/client"
     />
   );
