@@ -1,29 +1,34 @@
-// app/api/auth/callback/route.ts
-import { createClient } from "@/app/utils/supabase/server";
-import { NextResponse } from "next/server";
+import { NextResponse } from 'next/server'
+// The client you created from the Server-Side Auth instructions
+import { createClient } from '@/utils/supabase/server'
 
-export async function POST(request: Request) {
-    const { token, nonce } = await request.json(); // Receive both token and nonce
-    const supabase = await createClient();
-
-    try {
-        const { data, error } = await supabase.auth.signInWithIdToken({
-            provider: "google",
-            token,
-            nonce, // Pass the received nonce to Supabase
-        });
-
-        if (error) {
-            console.error("Error signing in with Google One Tap:", error.message);
-            return NextResponse.json({ error: error.message }, { status: 401 });
-        }
-
-        return NextResponse.json({ success: true, data }, { status: 200 });
-    } catch (error) {
-        console.error("Server error during sign-in:", error);
-        return NextResponse.json(
-            { error: "Internal server error" },
-            { status: 500 }
-        );
+export async function GET(request: Request) {
+    const { searchParams, origin } = new URL(request.url)
+    const code = searchParams.get('code')
+    // if "next" is in param, use it as the redirect URL
+    let next = searchParams.get('next') ?? '/'
+    if (!next.startsWith('/')) {
+        // if "next" is not a relative URL, use the default
+        next = '/'
     }
+
+    if (code) {
+        const supabase = await createClient()
+        const { error } = await supabase.auth.exchangeCodeForSession(code)
+        if (!error) {
+            const forwardedHost = request.headers.get('x-forwarded-host') // original origin before load balancer
+            const isLocalEnv = process.env.NODE_ENV === 'development'
+            if (isLocalEnv) {
+                // we can be sure that there is no load balancer in between, so no need to watch for X-Forwarded-Host
+                return NextResponse.redirect(`${origin}${next}`)
+            } else if (forwardedHost) {
+                return NextResponse.redirect(`https://${forwardedHost}${next}`)
+            } else {
+                return NextResponse.redirect(`${origin}${next}`)
+            }
+        }
+    }
+
+    // return the user to an error page with instructions
+    return NextResponse.redirect(`${origin}/auth/auth-code-error`)
 }

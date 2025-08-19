@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { supabase } from "@/app/utils/supabase/client";
+import { supabase } from "@/utils/supabase/client";
 import OneTapComponent from "@/components/OneTapComponent";
 import Image from "next/image";
 import { Wallet } from "lucide-react";

@@ -1,83 +1,79 @@
-// components/OneTapComponent.tsx
 "use client";
+
 import Script from "next/script";
+import { createClient } from "@/utils/supabase/client";
+import type { accounts, CredentialResponse } from "google-one-tap";
 import { useRouter } from "next/navigation";
 
-// ... (types and other imports)
+declare const google: { accounts: accounts };
 
-type CredentialResponse = {
-  credential: string;
-  select_by?: string;
-  clientId?: string;
-};
-
-const generateNonce = (): string => {
+// generate nonce to use for google id token sign-in
+const generateNonce = async (): Promise<string[]> => {
   const nonce = btoa(
     String.fromCharCode(...crypto.getRandomValues(new Uint8Array(32)))
   );
-  return nonce;
+  const encoder = new TextEncoder();
+  const encodedNonce = encoder.encode(nonce);
+  const hashBuffer = await crypto.subtle.digest("SHA-256", encodedNonce);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  const hashedNonce = hashArray
+    .map((b) => b.toString(16).padStart(2, "0"))
+    .join("");
+
+  return [nonce, hashedNonce];
 };
 
 const OneTapComponent = () => {
+  const supabase = createClient();
   const router = useRouter();
 
-  const handleGoogleCallback = async (response: CredentialResponse) => {
-    try {
-      const nonce = localStorage.getItem("google-auth-nonce");
-      localStorage.removeItem("google-auth-nonce"); // Clean up immediately
-
-      if (!nonce) {
-        throw new Error("Nonce not found. Possible security issue.");
-      }
-
-      const res = await fetch("/api/auth/callback", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ token: response.credential, nonce }),
-      });
-
-      const data = await res.json();
-
-      if (res.ok) {
-        router.refresh();
-      } else {
-        console.error("Authentication failed:", data.error);
-      }
-    } catch (error) {
-      console.error("Error logging in with Google One Tap", error);
-    }
-  };
-
   const initializeGoogleOneTap = async () => {
-    const nonce = generateNonce();
-    localStorage.setItem("google-auth-nonce", nonce);
+    console.log("Initializing Google One Tap");
+    const [nonce, hashedNonce] = await generateNonce();
+    console.log("Nonce: ", nonce, hashedNonce);
 
-    if (
-      typeof window !== "undefined" &&
-      (window as any).google &&
-      (window as any).google.accounts &&
-      (window as any).google.accounts.id
-    ) {
-      (window as any).google.accounts.id.initialize({
-        client_id: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!,
-        callback: handleGoogleCallback,
-        nonce: nonce, // Pass the raw nonce here
-        use_fedcm_for_prompt: true,
-      });
-
-      (window as any).google.accounts.id.prompt();
-    } else {
-      console.error("Google One Tap script not loaded yet.");
+    // check if there's already an existing session before initializing the one-tap UI
+    const { data, error } = await supabase.auth.getSession();
+    if (error) {
+      console.error("Error getting session", error);
     }
+    if (data.session) {
+      router.push("/");
+      return;
+    }
+
+    /* global google */
+    google.accounts.id.initialize({
+      client_id: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
+      callback: async (response: CredentialResponse) => {
+        try {
+          // send id token returned in response.credential to supabase
+          const { data, error } = await supabase.auth.signInWithIdToken({
+            provider: "google",
+            token: response.credential,
+            nonce,
+          });
+
+          if (error) throw error;
+          console.log("Session data: ", data);
+          console.log("Successfully logged in with Google One Tap");
+
+          // redirect to protected page
+          router.push("/");
+        } catch (error) {
+          console.error("Error logging in with Google One Tap", error);
+        }
+      },
+      nonce: hashedNonce,
+      // with chrome's removal of third-party cookies, we need to use FedCM instead (https://developers.google.com/identity/gsi/web/guides/fedcm-migration)
+      use_fedcm_for_prompt: true,
+    });
+    google.accounts.id.prompt(); // Display the One Tap UI
   };
 
   return (
     <Script
-      onReady={() => {
-        void initializeGoogleOneTap();
-      }}
+      onReady={initializeGoogleOneTap}
       src="https://accounts.google.com/gsi/client"
     />
   );

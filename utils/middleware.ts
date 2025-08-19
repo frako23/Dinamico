@@ -1,5 +1,5 @@
 import { NextResponse, type NextRequest } from 'next/server'
-import { getUser, updateSession } from '@/app/utils/supabase/middleware'
+import { getUser, updateSession } from '@/utils/supabase/middleware'
 
 export async function middleware(request: NextRequest, response: NextResponse) {
     const protectedRoutes = ['/home']
