@@ -52,9 +52,13 @@ const OneTapComponent = () => {
       console.error("Error getting session", error);
     }
     if (data.session) {
-      router.push("/");
+      router.push("/home");
       return;
     }
+    console.warn(
+      "Initializing Google One Tap with client ID: ",
+      process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID
+    );
 
     /* global google */
     google.accounts.id.initialize({
@@ -73,7 +77,7 @@ const OneTapComponent = () => {
           console.log("Successfully logged in with Google One Tap");
 
           // redirect to protected page
-          router.push("/");
+          router.push("/home");
         } catch (error) {
           console.error("Error logging in with Google One Tap", error);
         }
