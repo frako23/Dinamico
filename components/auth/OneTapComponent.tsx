@@ -42,19 +42,16 @@ const OneTapComponent = () => {
   const router = useRouter();
 
   const initializeGoogleOneTap = async () => {
-    console.log("Initializing Google One Tap");
+    console.warn("Initializing Google One Tap");
     const [nonce, hashedNonce] = await generateNonce();
-    console.log("Nonce: ", nonce, hashedNonce);
+    console.warn("Nonce: ", nonce, hashedNonce);
 
     // check if there's already an existing session before initializing the one-tap UI
     const { data, error } = await supabase.auth.getSession();
     if (error) {
       console.error("Error getting session", error);
     }
-    if (data.session) {
-      router.push("/home");
-      return;
-    }
+    // Ya no redirigimos automáticamente a /home si hay sesión
     console.warn(
       "Initializing Google One Tap with client ID: ",
       process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID
@@ -73,8 +70,36 @@ const OneTapComponent = () => {
           });
 
           if (error) throw error;
-          console.log("Session data: ", data);
-          console.log("Successfully logged in with Google One Tap");
+          console.warn("Session data: ", data);
+          console.warn("Successfully logged in with Google One Tap");
+
+          // Agregar usuario a la tabla profiles
+          if (data.user) {
+            const { id, email, user_metadata } = data.user;
+            const name = user_metadata?.name || "";
+            const avatar_url = user_metadata?.avatar_url || "";
+            const { error: upsertError } = await supabase
+              .from("profiles")
+              .upsert(
+                [
+                  {
+                    id,
+                    email,
+                    name,
+                    avatar_url,
+                  },
+                ],
+                { onConflict: "id" }
+              );
+            if (upsertError) {
+              console.error(
+                "Error upserting user in profiles table",
+                upsertError
+              );
+            } else {
+              console.warn("Usuario agregado/actualizado en profiles");
+            }
+          }
 
           // redirect to protected page
           router.push("/home");
