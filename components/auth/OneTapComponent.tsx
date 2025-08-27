@@ -74,32 +74,31 @@ const OneTapComponent = () => {
           console.warn("Successfully logged in with Google One Tap");
 
           // Agregar usuario a la tabla profiles
-          if (data.user) {
-            const { id, email, user_metadata } = data.user;
-            const name = user_metadata?.name || "";
-            const avatar_url = user_metadata?.avatar_url || "";
-            const { error: upsertError } = await supabase
-              .from("profiles")
-              .upsert(
-                [
-                  {
-                    id,
-                    email,
-                    name,
-                    avatar_url,
-                  },
-                ],
-                { onConflict: "id" }
-              );
-            if (upsertError) {
-              console.error(
-                "Error upserting user in profiles table",
-                upsertError
-              );
-            } else {
-              console.warn("Usuario agregado/actualizado en profiles");
-            }
-          }
+          // if (data.user) {
+          //   const { id, email, user_metadata } = data.user;
+          //   const username = user_metadata?.name || "";
+          //   const avatar_url = user_metadata?.avatar_url || "";
+          //   const { error: upsertError } = await supabase
+          //     .from("profiles")
+          //     .insert([
+          //       {
+          //         id,
+          //         username,
+          //         avatar_url,
+          //         role: "user",
+          //         email,
+          //         created_at: new Date().toISOString(),
+          //       },
+          //     ]);
+          //   if (upsertError) {
+          //     console.error(
+          //       "Error upserting user in profiles table",
+          //       upsertError
+          //     );
+          //   } else {
+          //     console.warn("Usuario agregado/actualizado en profiles");
+          //   }
+          // }
 
           // redirect to protected page
           router.push("/home");
