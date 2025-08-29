@@ -5,6 +5,7 @@ import { NextResponse } from "next/server";
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const supabase = createClient();
+  console.log("Received request with params:", searchParams.toString());
 
   const user_id = searchParams.get("user_id");
 
