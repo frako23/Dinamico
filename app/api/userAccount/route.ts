@@ -20,7 +20,7 @@ export async function GET(request: Request) {
     .from("userAccounts")
     .select("*")
     .eq("user_id", user_id)
-    .single();
+    .maybeSingle();
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
