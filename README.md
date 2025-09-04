@@ -2,134 +2,66 @@
 
 ## Descripción
 
-**Dinámico** es una aplicación de gestión de gastos personales diseñada para el contexto económico de Venezuela. Permite a los usuarios registrar transacciones en múltiples divisas (Bolívares, Dólares, etc.), categorizar sus gastos e ingresos, y monitorear sus finanzas de manera sencilla. La aplicación se construye con **Next.js** para una experiencia de usuario rápida y moderna, y **Supabase** como backend de código abierto para autenticación y base de datos en tiempo real.
+**Dinámico** es una aplicación de gestión de gastos personales diseñada para el contexto económico de Venezuela. Permite a los usuarios registrar transacciones en múltiples divisas (Bolívares, Dólares, etc.), categorizar sus gastos e ingresos, y monitorear sus finanzas de manera sencilla. La aplicación se construye con **Next.js** para una experiencia de usuario rápida y moderna, y utiliza **IndexedDB** a través de la librería **Dexie.js** para almacenar todos los datos directamente en el navegador del usuario, garantizando privacidad y funcionamiento offline.
 
 ## Características
 
-- **Registro de Transacciones:** Agrega fácilmente tus gastos e ingresos.
-
-- **Categorización:** Organiza tus movimientos financieros con categorías personalizadas.
-
-- **Control de Divisas:** Maneja múltiples monedas y realiza seguimiento de sus valores.
-
-- **Gráficos y Reportes:** Visualiza tus finanzas a través de reportes y gráficos claros.
-
-- **Interfaz Intuitiva:** Diseño limpio y fácil de usar para todos los usuarios.
+* **Registro de Transacciones:** Agrega fácilmente tus gastos e ingresos.
+* **Almacenamiento Local:** Todos tus datos se guardan de forma segura en tu propio dispositivo.
+* **Categorización:** Organiza tus movimientos financieros con categorías personalizadas.
+* **Control de Divisas:** Maneja múltiples monedas y realiza seguimiento de sus valores.
+* **Gráficos y Reportes:** Visualiza tus finanzas a través de reportes y gráficos claros.
+* **Interfaz Intuitiva:** Diseño limpio y fácil de usar para todos los usuarios.
 
 ## Tecnologías Utilizadas
 
-- **Frontend:**
-
-  - Next.js 14
-
-  - React
-
-  - Tailwind CSS
-
-- **Backend:**
-
-  - Supabase
-
-  - PostgreSQL
-
-  - Edge Functions (para lógica de negocio en el servidor)
+* **Frontend:**
+    * Next.js 14
+    * React
+    * Tailwind CSS
+* **Base de Datos Local:**
+    * IndexedDB
+    * Dexie.js
 
 ## Configuración del Proyecto
 
 Para ejecutar este proyecto localmente, sigue estos pasos:
 
-1. Clona este repositorio:
-   `git clone [URL_DEL_REPOSITORIO]`
+1.  Clona este repositorio:
+    ```bash
+    git clone [URL_DEL_REPOSITORIO]
+    ```
 
-2. Instala las dependencias:
-   `npm install`
+2.  Instala las dependencias:
+    ```bash
+    npm install
+    ```
 
-3. Configura las variables de entorno en un archivo `.env.local` con tus claves de Supabase y Google.
-   Aquí tienes el código Markdown que compone el README.md que creé para ti. Es el mismo contenido que se muestra en el panel de la derecha.
-
-# Dinámico: Manejo de Gastos en Venezuela
-
-## Descripción
-
-**Dinámico** es una aplicación de gestión de gastos personales diseñada para el contexto económico de Venezuela. Permite a los usuarios registrar transacciones en múltiples divisas (Bolívares, Dólares, etc.), categorizar sus gastos e ingresos, y monitorear sus finanzas de manera sencilla. La aplicación se construye con **Next.js** para una experiencia de usuario rápida y moderna, y **Supabase** como backend de código abierto para autenticación y base de datos en tiempo real.
-
-## Características
-
-- **Registro de Transacciones:** Agrega fácilmente tus gastos e ingresos.
-
-- **Categorización:** Organiza tus movimientos financieros con categorías personalizadas.
-
-- **Control de Divisas:** Maneja múltiples monedas y realiza seguimiento de sus valores.
-
-- **Gráficos y Reportes:** Visualiza tus finanzas a través de reportes y gráficos claros.
-
-- **Interfaz Intuitiva:** Diseño limpio y fácil de usar para todos los usuarios.
-
-## Tecnologías Utilizadas
-
-- **Frontend:**
-
-  - Next.js 14
-
-  - React
-
-  - Tailwind CSS
-
-- **Backend:**
-
-  - Supabase
-
-  - PostgreSQL
-
-  - Edge Functions (para lógica de negocio en el servidor)
-
-## Configuración del Proyecto
-
-Para ejecutar este proyecto localmente, sigue estos pasos:
-
-1. Clona este repositorio:
-   `git clone [URL_DEL_REPOSITORIO]`
-
-2. Instala las dependencias:
-   `npm install`
-
-3. Configura las variables de entorno en un archivo `.env.local` con tus claves de Supabase y Google.
-
-NEXT_PUBLIC_SUPABASE_URL=tu_url_de_supabase
-NEXT_PUBLIC_SUPABASE_ANON_KEY=tu_clave_anon_de_supabase
-NEXT_PUBLIC_GOOGLE_CLIENT_ID=tu_client_id_de_google
-NEXT_PUBLIC_GOOGLE_CLIENT_SECRET=tu_client_secret_de_google
-
-4. Inicia el servidor de desarrollo:
-   `npm run dev`
+3.  Inicia el servidor de desarrollo:
+    ```bash
+    npm run dev
+    ```
 
 ## Tareas Pendientes
 
-### ✅ **Autenticación**
+### Interfaz
 
-- Implementar autenticación con Google One Tap.
+- [ ] Crear la interfaz para cargar gastos o ingresos.
+- [ ] Integrar API de tasa de cambio (ej. BCV).
+- [ ] Crear componente para elegir icono para una categoría
+- [ ] Crear componente para elegir el color de la categoría
 
-### ⏳ **Backend (Supabase)**
+### Base de Datos (Dexie.js)
 
-- **Corregir error de envío errado de `nonce`:** Asegurar que el `nonce` enviado por el cliente coincida con el que espera la validación de Supabase para prevenir ataques de repetición.
+- [ ] **Definir el esquema de la base de datos:** Configurar las "stores" (similares a tablas) en Dexie.js para `transactions`, `categories` y `exchange_rates`.
+- [ ] **Implementar lógica CRUD:** Desarrollar las funciones para Crear, Leer, Actualizar y Eliminar (CRUD) transacciones y categorías utilizando Dexie.js.
+- [ ] **Conectar la UI con la base de datos:** Integrar las funciones de Dexie.js con los componentes de React para que los datos se guarden y se lean desde IndexedDB.
 
-- **Registrar usuario en Supabase:** Implementar la lógica para que el inicio de sesión con Google One Tap cree o identifique un usuario existente en la tabla `auth.users` de Supabase.
+### Frontend
 
-- **Crear tablas de transacciones, categorías y tasas de cambio:**
-
-- `transactions`: para almacenar todos los gastos e ingresos.
-
-- `categories`: para permitir la categorización de las transacciones.
-
-- `exchange_rates`: para gestionar las tasas de cambio de diferentes divisas.
-
-### ⬜ **Frontend**
-
-- Crear la interfaz de usuario para el registro de transacciones.
-
-- Desarrollar componentes para visualizar reportes y gráficos.
-
-- Implementar la lógica para manejar las tasas de cambio de forma dinámica.
+- [ ] Desarrollar componentes para visualizar reportes y gráficos a partir de los datos locales.
+- [ ] Implementar la lógica para manejar y almacenar las tasas de cambio de forma dinámica en IndexedDB.
+- [ ] Añadir funcionalidad para importar y exportar los datos del usuario (ej. en formato JSON).
 
 ## Contribución
 
