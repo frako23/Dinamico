@@ -1,12 +1,18 @@
-"use client"
+"use client";
 
-import { useStore } from "@/lib/store"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Button } from "@/components/ui/button"
+import { useStore } from "@/lib/store";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
 
 export default function SettingsPage() {
-  const { currency, setCurrency, resetAll } = useStore()
+  const { currency, setCurrency, resetAll } = useStore();
 
   return (
     <main className="mx-auto max-w-3xl pb-24 px-4">
@@ -27,7 +33,7 @@ export default function SettingsPage() {
                 <SelectValue placeholder="Selecciona moneda" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="MXN">MXN (Mex$)</SelectItem>
+                <SelectItem value="Bs">VEF (Bs)</SelectItem>
                 <SelectItem value="USD">USD ($)</SelectItem>
                 <SelectItem value="EUR">EUR (€)</SelectItem>
                 <SelectItem value="ARS">ARS ($)</SelectItem>
@@ -47,11 +53,12 @@ export default function SettingsPage() {
               Restablecer todo
             </Button>
             <p className="text-xs text-muted-foreground">
-              Esto borrará todas las transacciones y restaurará las categorías por defecto.
+              Esto borrará todas las transacciones y restaurará las categorías
+              por defecto.
             </p>
           </CardContent>
         </Card>
       </section>
     </main>
-  )
+  );
 }
