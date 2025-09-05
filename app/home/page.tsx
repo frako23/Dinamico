@@ -26,6 +26,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import ThemeToggle from "@/components/ui/themeToggle";
 
 export default function HomePage() {
   const [userId, setUserId] = useState<string | null>(null);
@@ -85,6 +86,7 @@ export default function HomePage() {
           >
             <Plus className="h-4 w-4 mr-2" /> Añadir
           </Button>
+          <ThemeToggle />
         </div>
       </header>
 

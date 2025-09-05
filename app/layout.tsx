@@ -1,12 +1,13 @@
+// app/layout.tsx
 import type React from "react";
 import type { Metadata } from "next";
 import "./globals.css";
 import Providers from "@/app/providers";
 
 export const metadata: Metadata = {
-  title: "v0 App",
-  description: "Created with v0",
-  generator: "v0.dev",
+  title: "Dinámico",
+  description: "App para gestionar tus finanzas personales",
+  generator: "Dinámico",
 };
 
 export default function RootLayout({
@@ -15,9 +16,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <head></head>
-      <body>
+    <html lang="en" suppressHydrationWarning>
+      <head />
+      <body className="bg-background text-foreground transition-colors duration-300">
         <Providers>{children}</Providers>
       </body>
     </html>

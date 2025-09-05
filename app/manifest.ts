@@ -1,10 +1,11 @@
-import type { MetadataRoute } from "next"
+import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
     name: "Dinámico",
     short_name: "Dinámico",
-    description: "Expense tracker simple y rápido para tus finanzas personales.",
+    description:
+      "Expense tracker simple y rápido para tus finanzas personales.",
     start_url: "/",
     display: "standalone",
     background_color: "#ffffff",
@@ -21,5 +22,5 @@ export default function manifest(): MetadataRoute.Manifest {
         type: "image/png",
       },
     ],
-  }
+  };
 }

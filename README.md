@@ -50,6 +50,8 @@ Para ejecutar este proyecto localmente, sigue estos pasos:
 - [ ] Integrar API de tasa de cambio (ej. BCV).
 - [ ] Crear componente para elegir icono para una categoría
 - [ ] Crear componente para elegir el color de la categoría
+- [X] Agregar boton de cambio de tema
+- [X] Colocar tema oscuro
 
 ### Base de Datos (Dexie.js)
 
