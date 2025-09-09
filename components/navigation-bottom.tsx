@@ -17,9 +17,7 @@ export function BottomNav() {
         <div className="mx-auto max-w-3xl  px-6 py-2 flex items-center justify-between border-t z-40">
           <Link
             href="/"
-            className={`flex flex-col items-center text-xs ${
-              pathname === "/" ? "text-emerald-700" : "text-muted-foreground"
-            }`}
+            className={`flex flex-col items-center text-xs ${pathname === "/" ? "text-emerald-700" : "text-muted-foreground"}`}
           >
             <Home className="h-5 w-5" />
             Inicio
@@ -33,22 +31,14 @@ export function BottomNav() {
           </Button>
           <Link
             href="/reports"
-            className={`flex flex-col items-center text-xs ${
-              pathname?.startsWith("/reports")
-                ? "text-emerald-700"
-                : "text-muted-foreground"
-            }`}
+            className={`flex flex-col items-center text-xs ${pathname?.startsWith("/reports") ? "text-emerald-700" : "text-muted-foreground"}`}
           >
             <PieChart className="h-5 w-5" />
             Reportes
           </Link>
           <Link
             href="/settings"
-            className={`flex flex-col items-center text-xs ${
-              pathname?.startsWith("/settings")
-                ? "text-emerald-700"
-                : "text-muted-foreground"
-            }`}
+            className={`flex flex-col items-center text-xs ${pathname?.startsWith("/settings") ? "text-emerald-700" : "text-muted-foreground"}`}
           >
             <Settings className="h-5 w-5" />
             Ajustes

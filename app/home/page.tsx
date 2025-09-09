@@ -119,7 +119,7 @@ export default function HomePage() {
               <div
                 className={cn(
                   "text-2xl font-semibold",
-                  summary.balance >= 0 ? "text-emerald-700" : "text-red-600"
+                  summary.balance >= 0 ? "text-emerald-00" : "text-red-600"
                 )}
               >
                 {formatCurrency(summary.balance, currency)}
@@ -129,7 +129,7 @@ export default function HomePage() {
           <Card>
             <CardContent className="p-4">
               <div className="text-xs text-muted-foreground">Ingresos</div>
-              <div className="text-2xl font-semibold text-emerald-700">
+              <div className="text-2xl font-semibold text-emerald-500">
                 {formatCurrency(summary.income, currency)}
               </div>
             </CardContent>

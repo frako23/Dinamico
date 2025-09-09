@@ -14,7 +14,7 @@ export default function LoginPage() {
       <div className="mx-auto max-w-lg grid grid-cols-1 gap-8 px-4 py-8 md:py-16">
         {/* Branding */}
         <section className="flex flex-col justify-center">
-          {/* <div className="flex items-center gap-2 text-emerald-700">
+          {/* <div className="flex items-center gap-2 text-emerald-500">
             <div className="h-9 w-9 rounded-lg bg-emerald-600/10 flex items-center justify-center">
               <Wallet className="h-5 w-5" />
             </div>
