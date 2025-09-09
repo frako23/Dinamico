@@ -17,7 +17,7 @@ export default function SettingsPage() {
 
   return (
     <main className="mx-auto max-w-3xl pb-24 px-4">
-      <header className="sticky top-0 z-30 bg-white/80 backdrop-blur supports-[backdrop-filter]:bg-white/60 border-b">
+      <header className="sticky top-0 z-30 bg-white/80 backdrop-blur supports-[backdrop-filter]:bg-transparent border-b">
         <div className="px-4 py-3 flex items-center justify-between">
           <div className="text-xl font-bold tracking-tight">Ajustes</div>
         </div>
