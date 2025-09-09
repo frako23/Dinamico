@@ -7,7 +7,7 @@ export default function ThemeToggle() {
   return (
     <button
       onClick={toggleTheme}
-      className="px-4 py-2 rounded bg-primary text-primary-foreground hover:bg-accent hover:text-accent-foreground transition"
+      className="px-4 py-2 rounded bg-accent text-accent-foreground hover:bg-primary hover:text-primary-foreground transition"
     >
       {theme === "dark" ? "🌙 Modo Oscuro" : "☀️ Modo Claro"}
     </button>

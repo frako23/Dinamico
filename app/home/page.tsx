@@ -16,9 +16,7 @@ import {
 } from "@/lib/format";
 import { TransactionsList } from "../../components/transactions-list";
 import { AddTransaction } from "../../components/transaction-add";
-import { BottomNav } from "../../components/navigation-bottom";
 import { useUserAccount } from "@/hooks/use-userAccount";
-import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
@@ -63,9 +61,10 @@ export default function HomePage() {
 
   return (
     <main className="mx-auto max-w-3xl pb-24">
-      <header className="sticky top-0 z-30 bg-white/80 backdrop-blur supports-[backdrop-filter]:bg-white/60 border-b">
+      <header className="sticky top-0 z-30 bg-white/80 backdrop-blur supports-[backdrop-filter]:bg-transparent border-b">
         <div className="px-4 py-3 flex items-center justify-between">
           <div className="text-xl font-bold tracking-tight">Dinámico</div>
+
           <div className="grid gap-1.5">
             <Select value={accountId} onValueChange={setAccountId}>
               <SelectTrigger>
@@ -78,6 +77,7 @@ export default function HomePage() {
               </SelectContent>
             </Select>
           </div>
+
           <Button
             size="lg"
             variant="default"
@@ -86,7 +86,6 @@ export default function HomePage() {
           >
             <Plus className="h-4 w-4 mr-2" /> Añadir
           </Button>
-          <ThemeToggle />
         </div>
       </header>
 
@@ -166,8 +165,6 @@ export default function HomePage() {
       </section>
 
       <AddTransaction open={openAdd} onOpenChange={setOpenAdd} />
-
-      <BottomNav />
     </main>
   );
 }

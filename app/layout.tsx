@@ -3,6 +3,7 @@ import type React from "react";
 import type { Metadata } from "next";
 import "./globals.css";
 import Providers from "@/app/providers";
+import { BottomNav } from "@/components/navigation-bottom";
 
 export const metadata: Metadata = {
   title: "Dinámico",
@@ -19,7 +20,10 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head />
       <body className="bg-background text-foreground transition-colors duration-300">
-        <Providers>{children}</Providers>
+        <Providers>
+          {children}
+          <BottomNav />
+        </Providers>
       </body>
     </html>
   );

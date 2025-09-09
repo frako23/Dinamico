@@ -10,6 +10,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
+import ThemeToggle from "@/components/ui/themeToggle";
 
 export default function SettingsPage() {
   const { currency, setCurrency, resetAll } = useStore();
@@ -24,24 +25,34 @@ export default function SettingsPage() {
 
       <section className="mt-4 grid gap-4">
         <Card>
-          <CardHeader>
-            <CardTitle>Moneda</CardTitle>
-          </CardHeader>
-          <CardContent className="max-w-xs">
-            <Select value={currency} onValueChange={setCurrency}>
-              <SelectTrigger>
-                <SelectValue placeholder="Selecciona moneda" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="Bs">VEF (Bs)</SelectItem>
-                <SelectItem value="USD">USD ($)</SelectItem>
-                <SelectItem value="EUR">EUR (€)</SelectItem>
-                <SelectItem value="ARS">ARS ($)</SelectItem>
-                <SelectItem value="CLP">CLP ($)</SelectItem>
-                <SelectItem value="COP">COP ($)</SelectItem>
-              </SelectContent>
-            </Select>
-          </CardContent>
+          <div>
+            <CardHeader>
+              <CardTitle>Moneda</CardTitle>
+            </CardHeader>
+            <CardContent className="max-w-xs">
+              <Select value={currency} onValueChange={setCurrency}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Selecciona moneda" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Bs">VEF (Bs)</SelectItem>
+                  <SelectItem value="USD">USD ($)</SelectItem>
+                  <SelectItem value="EUR">EUR (€)</SelectItem>
+                  <SelectItem value="ARS">ARS ($)</SelectItem>
+                  <SelectItem value="CLP">CLP ($)</SelectItem>
+                  <SelectItem value="COP">COP ($)</SelectItem>
+                </SelectContent>
+              </Select>
+            </CardContent>
+          </div>
+          <div>
+            <CardHeader>
+              <CardTitle>Tema</CardTitle>
+            </CardHeader>
+            <CardContent className="max-w-xs">
+              <ThemeToggle />
+            </CardContent>
+          </div>
         </Card>
 
         <Card>
