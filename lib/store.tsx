@@ -183,7 +183,7 @@ export function useStore(): Store {
     persist({
       transactions: [],
       categories: defaultCategories,
-      currency: "Bs",
+      currency: "VES",
       editingId: undefined,
     });
   }, [persist]);

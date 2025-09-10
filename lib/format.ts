@@ -1,13 +1,19 @@
 export function formatCurrency(value: number, currency: string) {
   try {
-    return new Intl.NumberFormat("es-ES", {
+    return new Intl.NumberFormat("es-VE", {
       style: "currency",
       currency,
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+      currencyDisplay: "symbol", // muestra el símbolo en lugar del código
     }).format(value);
   } catch {
-    return new Intl.NumberFormat("es-ES", {
+    return new Intl.NumberFormat("es-VE", {
       style: "currency",
       currency: "USD",
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+      currencyDisplay: "symbol",
     }).format(value);
   }
 }

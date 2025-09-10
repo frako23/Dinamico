@@ -35,7 +35,7 @@ export default function SettingsPage() {
                   <SelectValue placeholder="Selecciona moneda" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="Bs">VEF (Bs)</SelectItem>
+                  <SelectItem value="VES">VEF (Bs)</SelectItem>
                   <SelectItem value="USD">USD ($)</SelectItem>
                   <SelectItem value="EUR">EUR (€)</SelectItem>
                   <SelectItem value="ARS">ARS ($)</SelectItem>

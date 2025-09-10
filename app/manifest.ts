@@ -2,6 +2,10 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
+    lang: "es",
+    orientation: "portrait",
+    scope: "/",
+    id: "/",
     name: "Dinámico",
     short_name: "Dinámico",
     description:
