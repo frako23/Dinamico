@@ -41,13 +41,20 @@ type Store = State & {
 const KEY = "dinamico:v1";
 
 function initState(): State {
-  if (typeof window !== "undefined") {
-    try {
-      const raw = window.localStorage.getItem(KEY);
-      if (raw) return JSON.parse(raw) as State;
-    } catch {}
-  }
-  // seed with example data
+  if (typeof window === "undefined")
+    return {
+      transactions: [],
+      categories: [],
+      currency: "Bs",
+      editingId: undefined,
+    };
+
+  try {
+    const raw = window.localStorage.getItem(KEY);
+    if (raw) return JSON.parse(raw);
+  } catch {}
+
+  // datos de ejemplo solo en cliente
   const now = new Date();
   const iso = (d: Date) => d.toISOString();
   const sample: Transaction[] = [
@@ -56,7 +63,7 @@ function initState(): State {
       type: "income",
       amount: 25000,
       categoryId: "salary",
-      date: iso(new Date(now.getFullYear(), now.getMonth(), 1)),
+      date: "2025-09-01T00:00:00.000Z",
       note: "Nómina",
       accountId: "Banco",
     },
@@ -65,29 +72,12 @@ function initState(): State {
       type: "expense",
       amount: 1200,
       categoryId: "coffee",
-      date: iso(new Date()),
+      date: "2025-09-10T12:00:00.000Z",
       note: "Cappuccino",
       accountId: "Tarjeta",
     },
-    {
-      id: "t3",
-      type: "expense",
-      amount: 3400,
-      categoryId: "groceries",
-      date: iso(new Date()),
-      note: "Compra semanal",
-      accountId: "Tarjeta",
-    },
-    {
-      id: "t4",
-      type: "expense",
-      amount: 9500,
-      categoryId: "rent",
-      date: iso(new Date(now.getFullYear(), now.getMonth(), 2)),
-      note: "Depto",
-      accountId: "Banco",
-    },
   ];
+
   return {
     transactions: sample,
     categories: defaultCategories,
@@ -110,10 +100,15 @@ class LocalStore {
   setState(next: Partial<State>) {
     this.state = { ...this.state, ...next };
     try {
-      localStorage.setItem(KEY, JSON.stringify(this.state));
-    } catch {}
+      if (typeof window !== "undefined") {
+        localStorage.setItem(KEY, JSON.stringify(this.state));
+      }
+    } catch (e) {
+      console.error("Error guardando en localStorage:", e);
+    }
     this.emit();
   }
+
   emit() {
     for (const l of this.listeners) l();
   }
@@ -126,7 +121,7 @@ class LocalStore {
 const StoreContext = createContext<LocalStore | null>(null);
 
 export function StoreProvider({ children }: { children: React.ReactNode }) {
-  const ref = useRef<LocalStore>();
+  const ref = useRef<LocalStore>(new LocalStore());
   if (!ref.current) ref.current = new LocalStore();
   return (
     <StoreContext.Provider value={ref.current}>
