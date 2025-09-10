@@ -3,20 +3,23 @@
 import { useState, useEffect } from "react";
 import { Plus, ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+// import {
+//   Select,
+//   SelectContent,
+//   SelectItem,
+//   SelectTrigger,
+//   SelectValue,
+// } from "@/components/ui/select";
 import { monthLabel, addMonths } from "@/lib/format";
 import { useUserAccount } from "@/hooks/use-userAccount";
 import { HomeContent } from "@/components/home-content";
+import { useCurrencyRates } from "@/hooks/use-currencyRates";
 
 export default function HomePage() {
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
+  const { rates } = useCurrencyRates();
+  console.log("RATES:", rates);
 
   const [userId, setUserId] = useState<string | null>(null);
   const [openAdd, setOpenAdd] = useState(false);
@@ -40,7 +43,7 @@ export default function HomePage() {
           <div className="text-xl font-bold tracking-tight">Dinámico</div>
 
           <div className="grid gap-1.5">
-            <Select value={accountId} onValueChange={setAccountId}>
+            {/* <Select value={accountId} onValueChange={setAccountId}>
               <SelectTrigger>
                 <SelectValue placeholder="Selecciona una cuenta" />
               </SelectTrigger>
@@ -49,7 +52,7 @@ export default function HomePage() {
                 <SelectItem value="Banco $">Banco $</SelectItem>
                 <SelectItem value="Efectivo $">Efectivo $</SelectItem>
               </SelectContent>
-            </Select>
+            </Select> */}
           </div>
 
           <Button
