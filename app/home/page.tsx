@@ -103,14 +103,14 @@ export default function HomePage() {
             />
           </div>
 
-          <Button
+          {/* <Button
             size="lg"
             variant="default"
             className="bg-emerald-600 hover:bg-emerald-700"
             onClick={() => setOpenAdd(true)}
           >
             <Plus className="h-4 w-4 mr-2" /> Añadir
-          </Button>
+          </Button> */}
         </div>
       </header>
 
