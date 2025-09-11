@@ -1,15 +1,24 @@
 import { useEffect, useState } from "react";
 
+type CurrencyRates = {
+  fuente: string;
+  nombre: string;
+  compra: string | null;
+  venta: string | null;
+  promedio: number;
+  fechaActualizacion: Date;
+};
+
 export const useCurrencyRates = () => {
   const currencyRateURL = "https://ve.dolarapi.com/v1/dolares";
 
-  const [rates, setRates] = useState<object[] | null>(null);
+  const [rate, setRate] = useState<CurrencyRates[] | null>(null);
   useEffect(() => {
     const fetchRates = async () => {
       try {
         const response = await fetch(currencyRateURL);
         const data = await response.json();
-        setRates(data);
+        setRate(data[0].promedio);
       } catch (error) {
         console.error("Error fetching currency rates:", error);
       }
@@ -18,5 +27,5 @@ export const useCurrencyRates = () => {
     fetchRates();
   }, []);
 
-  return { rates };
+  return { rate };
 };

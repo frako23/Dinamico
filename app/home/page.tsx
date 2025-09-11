@@ -10,17 +10,19 @@ import { Button } from "@/components/ui/button";
 //   SelectTrigger,
 //   SelectValue,
 // } from "@/components/ui/select";
-import { monthLabel, addMonths } from "@/lib/format";
+import { monthLabel, addMonths, formatCurrency } from "@/lib/format";
 import { useUserAccount } from "@/hooks/use-userAccount";
 import { HomeContent } from "@/components/home-content";
 import { useCurrencyRates } from "@/hooks/use-currencyRates";
+import { Input } from "@/components/ui/input";
+import { Label } from "recharts";
 
 export default function HomePage() {
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
-  const { rates } = useCurrencyRates();
-  console.log("RATES:", rates);
-
+  const { rate } = useCurrencyRates();
+  const [bsValue, setBsValue] = useState("");
+  const [usdValue, setUsdValue] = useState("");
   const [userId, setUserId] = useState<string | null>(null);
   const [openAdd, setOpenAdd] = useState(false);
   const [currentMonth, setCurrentMonth] = useState(() => {
@@ -28,6 +30,37 @@ export default function HomePage() {
     return new Date(now.getFullYear(), now.getMonth(), 1);
   });
   const [accountId, setAccountId] = useState<string>("Efectivo");
+
+  useEffect(() => {
+    if (typeof rate === "number") {
+      setBsValue(parseFloat(rate).toFixed(2)); // o formatCurrency(rate, "VES") si prefieres
+      setUsdValue("1");
+    }
+  }, [rate]);
+
+  const handleBsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setBsValue(value);
+
+    const numericValue = parseFloat(value);
+    if (!isNaN(numericValue) && typeof rate === "number") {
+      setUsdValue((numericValue / rate).toFixed(2));
+    } else {
+      setUsdValue("");
+    }
+  };
+
+  const handleUsdChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setUsdValue(value);
+
+    const numericValue = parseFloat(value);
+    if (!isNaN(numericValue) && typeof rate === "number") {
+      setBsValue((numericValue * rate).toFixed(2));
+    } else {
+      setBsValue("");
+    }
+  };
 
   useEffect(() => {
     const storedTheme = localStorage.getItem("theme");
@@ -42,7 +75,7 @@ export default function HomePage() {
         <div className="px-4 py-3 flex items-center justify-between">
           <div className="text-xl font-bold tracking-tight">Dinámico</div>
 
-          <div className="grid gap-1.5">
+          <div className="grid gap-1.5 grid-cols-2 ">
             {/* <Select value={accountId} onValueChange={setAccountId}>
               <SelectTrigger>
                 <SelectValue placeholder="Selecciona una cuenta" />
@@ -53,6 +86,21 @@ export default function HomePage() {
                 <SelectItem value="Efectivo $">Efectivo $</SelectItem>
               </SelectContent>
             </Select> */}
+            <span className="text-end font-bold">Bs:</span>
+            <Input
+              type="number"
+              placeholder="Bs"
+              value={bsValue}
+              onChange={handleBsChange}
+            />
+            <span className="text-end font-bold">US$:</span>
+
+            <Input
+              type="number"
+              placeholder="USD"
+              value={usdValue}
+              onChange={handleUsdChange}
+            />
           </div>
 
           <Button
