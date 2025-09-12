@@ -28,15 +28,18 @@ import { Textarea } from "@/components/ui/textarea";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useStore } from "@/lib/store";
 import { formatCurrency } from "@/lib/format";
+import { set } from "react-hook-form";
 
 type Props = {
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
+  newRate?: number;
 };
 
 export function AddTransaction({
   open = false,
   onOpenChange = () => {},
+  newRate,
 }: Props) {
   const isMobile = useIsMobile();
   const {
@@ -53,21 +56,25 @@ export function AddTransaction({
   const editing = transactionById(editingId || "");
 
   const [type, setType] = useState<"income" | "expense">("expense");
-  const [amount, setAmount] = useState<string>("");
+  const [amountUsd, setAmountUsd] = useState<string>("");
+  const [amountBs, setAmountBs] = useState<string>("");
   const [categoryId, setCategoryId] = useState<string>("");
   const [date, setDate] = useState<string>("");
   const [note, setNote] = useState<string>("");
   const [accountId, setAccountId] = useState<string>("Banco Bs");
+  const [rate, setRate] = useState<string>(newRate ? newRate.toString() : "");
 
   useEffect(() => {
     if (editing) {
       setType(editing.type);
-      setAmount(editing.amount.toString());
+      setAmountUsd(editing.amountUsd.toString());
+      setAmountBs(editing.amountBs.toString());
       setCategoryId(editing.categoryId);
       setDate(editing.date.slice(0, 10));
       setNote(editing.note || "");
       setAccountId(editing.accountId || "Banco Bs");
       onOpenChange(true);
+      setRate(editing.rate.toString());
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [editingId]);
@@ -79,11 +86,13 @@ export function AddTransaction({
 
   function reset() {
     setType("expense");
-    setAmount("");
+    setAmountUsd("");
+    setAmountBs("");
     setCategoryId("");
     setDate(new Date().toISOString().slice(0, 10));
     setNote("");
     setAccountId("Efectivo");
+    setRate("");
   }
 
   useEffect(() => {
@@ -99,25 +108,30 @@ export function AddTransaction({
   }
 
   function submit() {
-    const value = Number.parseFloat(amount);
-    if (!value || !categoryId || !date) return;
+    const valueUsd = Number.parseFloat(amountUsd);
+    const valueBs = Number.parseFloat(amountBs);
+    if (!valueUsd || !valueBs || !categoryId || !date) return;
     if (isEditing && editing) {
       updateTransaction(editing.id, {
         type,
-        amount: value,
+        amountUsd: valueUsd,
+        amountBs: valueBs,
         categoryId,
         date: new Date(date).toISOString(),
         note,
         accountId,
+        rate: Number.parseFloat(rate) || 0,
       });
     } else {
       addTransaction({
         type,
-        amount: value,
+        amountUsd: valueUsd,
+        amountBs: valueBs,
         categoryId,
         date: new Date(date).toISOString(),
         note,
         accountId,
+        rate: Number.parseFloat(rate) || 0,
       });
     }
     closeAll();
@@ -144,32 +158,46 @@ export function AddTransaction({
         </Button>
       </div>
 
-      <div className="grid grid-cols-2 gap-2">
+      <div className="grid grid-cols-3 gap-2">
         <div className="grid gap-1.5">
           <Label htmlFor="amount">Monto ({currency})</Label>
           <Input
             id="amount"
             inputMode="decimal"
             placeholder="0.00"
-            value={amount}
-            onChange={(e) => setAmount(e.target.value)}
+            value={amountBs}
+            onChange={(e) => setAmountBs(e.target.value)}
           />
           <div className="text-xs text-muted-foreground">
-            {amount ? formatCurrency(Number(amount) || 0, currency) : " "}
+            {amountBs ? formatCurrency(Number(amountBs) || 0, currency) : " "}
           </div>
         </div>
 
         <div className="grid gap-1.5">
-          <Label htmlFor="amount">Monto ({currency})</Label>
+          <Label htmlFor="amount">Monto (US$)</Label>
           <Input
             id="amount"
             inputMode="decimal"
             placeholder="0.00"
-            value={amount}
-            onChange={(e) => setAmount(e.target.value)}
+            value={amountUsd}
+            onChange={(e) => setAmountUsd(e.target.value)}
           />
           <div className="text-xs text-muted-foreground">
-            {amount ? formatCurrency(Number(amount) || 0, currency) : " "}
+            {amountUsd ? formatCurrency(Number(amountUsd) || 0, currency) : " "}
+          </div>
+        </div>
+
+         <div className="grid gap-1">
+          <Label htmlFor="rate">Tasa</Label>
+          <Input
+            id="rate"
+            inputMode="decimal"
+            placeholder="0.00"
+            value={rate}
+            disabled
+          />
+          <div className="text-xs text-muted-foreground">
+            {rate ? formatCurrency(Number(rate) || 0, "VES") : " "}
           </div>
         </div>
       </div>
