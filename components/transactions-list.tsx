@@ -30,7 +30,7 @@ export function TransactionsList({ transactions = [], filter = "all" }: Props) {
       const key = formatDateShort(new Date(t.date));
       const prev = map.get(key) || { total: 0, items: [] };
       map.set(key, {
-        total: prev.total + (t.type === "income" ? t.amount : -t.amount),
+        total: prev.total + (t.type === "income" ? t.amountUsd : -t.amountUsd),
         items: [...prev.items, t],
       });
     }
@@ -85,7 +85,7 @@ export function TransactionsList({ transactions = [], filter = "all" }: Props) {
                         }
                       >
                         {(t.type === "income" ? "+" : "-") +
-                          formatCurrency(t.amount, currency)}
+                          formatCurrency(t.amountUsd, currency)}
                       </div>
                     </div>
                     <div className="text-xs text-muted-foreground">

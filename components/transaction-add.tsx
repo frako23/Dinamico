@@ -28,12 +28,12 @@ import { Textarea } from "@/components/ui/textarea";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useStore } from "@/lib/store";
 import { formatCurrency } from "@/lib/format";
-import { set } from "react-hook-form";
+import { useCalculation } from "@/hooks/use-calculation";
 
 type Props = {
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
-  newRate?: number;
+  newRate?: string;
 };
 
 export function AddTransaction({
@@ -54,7 +54,8 @@ export function AddTransaction({
 
   const isEditing = !!editingId;
   const editing = transactionById(editingId || "");
-
+  const { bsValue, usdValue, handleBsChange, handleUsdChange } =
+    useCalculation();
   const [type, setType] = useState<"income" | "expense">("expense");
   const [amountUsd, setAmountUsd] = useState<string>("");
   const [amountBs, setAmountBs] = useState<string>("");
@@ -62,7 +63,13 @@ export function AddTransaction({
   const [date, setDate] = useState<string>("");
   const [note, setNote] = useState<string>("");
   const [accountId, setAccountId] = useState<string>("Banco Bs");
-  const [rate, setRate] = useState<string>(newRate ? newRate.toString() : "");
+  const [rate, setRate] = useState<string>("");
+
+  useEffect(() => {
+    if (!isEditing && newRate) {
+      setRate(newRate);
+    }
+  }, [isEditing, newRate]);
 
   useEffect(() => {
     if (editing) {
@@ -74,10 +81,12 @@ export function AddTransaction({
       setNote(editing.note || "");
       setAccountId(editing.accountId || "Banco Bs");
       onOpenChange(true);
-      setRate(editing.rate.toString());
+
+      // Solo usar editing.rate si no hay newRate
+      setRate(newRate ?? editing.rate.toString());
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [editingId]);
+  }, [editingId, newRate]);
+  console.log(rate);
 
   const cats = useMemo(
     () => categories.filter((c) => c.type === type),
@@ -160,16 +169,16 @@ export function AddTransaction({
 
       <div className="grid grid-cols-3 gap-2">
         <div className="grid gap-1.5">
-          <Label htmlFor="amount">Monto ({currency})</Label>
+          <Label htmlFor="amount">Monto (VES)</Label>
           <Input
             id="amount"
             inputMode="decimal"
             placeholder="0.00"
-            value={amountBs}
-            onChange={(e) => setAmountBs(e.target.value)}
+            value={bsValue}
+            onChange={handleBsChange}
           />
           <div className="text-xs text-muted-foreground">
-            {amountBs ? formatCurrency(Number(amountBs) || 0, currency) : " "}
+            {bsValue ? formatCurrency(Number(bsValue) || 0, "VES") : " "}
           </div>
         </div>
 
@@ -179,15 +188,15 @@ export function AddTransaction({
             id="amount"
             inputMode="decimal"
             placeholder="0.00"
-            value={amountUsd}
-            onChange={(e) => setAmountUsd(e.target.value)}
+            value={usdValue}
+            onChange={handleUsdChange}
           />
           <div className="text-xs text-muted-foreground">
-            {amountUsd ? formatCurrency(Number(amountUsd) || 0, currency) : " "}
+            {usdValue ? formatCurrency(Number(usdValue) || 0, currency) : " "}
           </div>
         </div>
 
-         <div className="grid gap-1">
+        <div className="grid gap-1">
           <Label htmlFor="rate">Tasa</Label>
           <Input
             id="rate"

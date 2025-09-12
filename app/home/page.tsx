@@ -15,14 +15,20 @@ import { useUserAccount } from "@/hooks/use-userAccount";
 import { HomeContent } from "@/components/home-content";
 import { useCurrencyRates } from "@/hooks/use-currencyRates";
 import { Input } from "@/components/ui/input";
-import { Label } from "recharts";
+import { useCalculation } from "@/hooks/use-calculation";
 
 export default function HomePage() {
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
   const { rate } = useCurrencyRates();
-  const [bsValue, setBsValue] = useState("");
-  const [usdValue, setUsdValue] = useState("");
+  const {
+    bsValue,
+    setBsValue,
+    usdValue,
+    setUsdValue,
+    handleBsChange,
+    handleUsdChange,
+  } = useCalculation();
   const [userId, setUserId] = useState<string | null>(null);
   const [openAdd, setOpenAdd] = useState(false);
   const [currentMonth, setCurrentMonth] = useState(() => {
@@ -37,30 +43,6 @@ export default function HomePage() {
       setUsdValue("1");
     }
   }, [rate]);
-
-  const handleBsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setBsValue(value);
-
-    const numericValue = parseFloat(value);
-    if (!isNaN(numericValue) && typeof rate === "number") {
-      setUsdValue((numericValue / rate).toFixed(2));
-    } else {
-      setUsdValue("");
-    }
-  };
-
-  const handleUsdChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setUsdValue(value);
-
-    const numericValue = parseFloat(value);
-    if (!isNaN(numericValue) && typeof rate === "number") {
-      setBsValue((numericValue * rate).toFixed(2));
-    } else {
-      setBsValue("");
-    }
-  };
 
   useEffect(() => {
     const storedTheme = localStorage.getItem("theme");
@@ -145,6 +127,7 @@ export default function HomePage() {
           setAccountId={setAccountId}
           openAdd={openAdd}
           setOpenAdd={setOpenAdd}
+          rate={rate ?? undefined}
         />
       )}
     </main>

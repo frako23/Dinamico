@@ -12,7 +12,7 @@ type CurrencyRates = {
 export const useCurrencyRates = () => {
   const currencyRateURL = "https://ve.dolarapi.com/v1/dolares";
 
-  const [rate, setRate] = useState<CurrencyRates[] | null>(null);
+  const [rate, setRate] = useState<string | null>(null);
   useEffect(() => {
     const fetchRates = async () => {
       try {

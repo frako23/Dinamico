@@ -15,12 +15,14 @@ export function HomeContent({
   setAccountId,
   openAdd,
   setOpenAdd,
+  rate,
 }: {
   currentMonth: Date;
   accountId: string;
   setAccountId: (id: string) => void;
   openAdd: boolean;
   setOpenAdd: (v: boolean) => void;
+  rate?: string;
 }) {
   const { transactions, currency, getBalanceForRange } = useStore();
 
@@ -98,7 +100,7 @@ export function HomeContent({
         </Tabs>
       </section>
 
-      <AddTransaction open={openAdd} onOpenChange={setOpenAdd} />
+      <AddTransaction open={openAdd} onOpenChange={setOpenAdd} newRate={rate} />
     </>
   );
 }
