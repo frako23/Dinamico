@@ -33,7 +33,7 @@ export const useCalculation = () => {
   useEffect(() => {
     if (rate) {
       if (bsValue) {
-        const usd = parseFloat(bsValue) / parseFloat(rate);
+        const usd = parseFloat(bsValue) / rate;
         setUsdValue(usd.toFixed(2));
       } else {
         setUsdValue("");
@@ -44,7 +44,7 @@ export const useCalculation = () => {
   useEffect(() => {
     if (rate) {
       if (usdValue) {
-        const bs = parseFloat(usdValue) * parseFloat(rate);
+        const bs = parseFloat(usdValue) * rate;
         setBsValue(bs.toFixed(2));
       } else {
         setBsValue("");

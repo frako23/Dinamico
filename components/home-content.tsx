@@ -22,7 +22,7 @@ export function HomeContent({
   setAccountId: (id: string) => void;
   openAdd: boolean;
   setOpenAdd: (v: boolean) => void;
-  rate?: string;
+  rate?: number;
 }) {
   const { transactions, currency, getBalanceForRange } = useStore();
 

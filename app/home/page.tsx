@@ -15,6 +15,7 @@ import { useUserAccount } from "@/hooks/use-userAccount";
 import { HomeContent } from "@/components/home-content";
 import { useCurrencyRates } from "@/hooks/use-currencyRates";
 import { Input } from "@/components/ui/input";
+import { useCalculation } from "@/hooks/use-calculation";
 
 export default function HomePage() {
   const [mounted, setMounted] = useState(false);
@@ -25,8 +26,6 @@ export default function HomePage() {
     setBsValue,
     usdValue,
     setUsdValue,
-    handleBsChange,
-    handleUsdChange,
   } = useCalculation();
   const [userId, setUserId] = useState<string | null>(null);
   const [openAdd, setOpenAdd] = useState(false);

@@ -33,7 +33,7 @@ import { useCalculation } from "@/hooks/use-calculation";
 type Props = {
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
-  newRate?: string;
+  newRate?: number;
 };
 
 export function AddTransaction({
@@ -63,7 +63,7 @@ export function AddTransaction({
   const [date, setDate] = useState<string>("");
   const [note, setNote] = useState<string>("");
   const [accountId, setAccountId] = useState<string>("Banco Bs");
-  const [rate, setRate] = useState<string>("");
+  const [rate, setRate] = useState<number>(0);
 
   useEffect(() => {
     if (!isEditing && newRate) {
@@ -83,7 +83,7 @@ export function AddTransaction({
       onOpenChange(true);
 
       // Solo usar editing.rate si no hay newRate
-      setRate(newRate ?? editing.rate.toString());
+      setRate(newRate ?? editing.rate);
     }
   }, [editingId, newRate]);
   console.log(rate);
@@ -101,7 +101,7 @@ export function AddTransaction({
     setDate(new Date().toISOString().slice(0, 10));
     setNote("");
     setAccountId("Efectivo");
-    setRate("");
+    setRate(0);
   }
 
   useEffect(() => {
@@ -129,7 +129,7 @@ export function AddTransaction({
         date: new Date(date).toISOString(),
         note,
         accountId,
-        rate: Number.parseFloat(rate) || 0,
+        rate: rate || 0,
       });
     } else {
       addTransaction({
@@ -140,7 +140,7 @@ export function AddTransaction({
         date: new Date(date).toISOString(),
         note,
         accountId,
-        rate: Number.parseFloat(rate) || 0,
+        rate: rate || 0,
       });
     }
     closeAll();
