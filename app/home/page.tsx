@@ -15,7 +15,6 @@ import { useUserAccount } from "@/hooks/use-userAccount";
 import { HomeContent } from "@/components/home-content";
 import { useCurrencyRates } from "@/hooks/use-currencyRates";
 import { Input } from "@/components/ui/input";
-import { Label } from "recharts";
 
 export default function HomePage() {
   const [mounted, setMounted] = useState(false);
@@ -30,19 +29,13 @@ export default function HomePage() {
     return new Date(now.getFullYear(), now.getMonth(), 1);
   });
   const [accountId, setAccountId] = useState<string>("Efectivo");
-
-  useEffect(() => {
-    if (typeof rate === "number") {
-      setBsValue(parseFloat(rate).toFixed(2)); // o formatCurrency(rate, "VES") si prefieres
-      setUsdValue("1");
-    }
-  }, [rate]);
+  const [editing, setEditing] = useState<"bs" | "usd" | null>(null);
 
   const handleBsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setBsValue(value);
+    setEditing("bs");
+    setBsValue(e.target.value);
 
-    const numericValue = parseFloat(value);
+    const numericValue = parseFloat(bsValue);
     if (!isNaN(numericValue) && typeof rate === "number") {
       setUsdValue((numericValue / rate).toFixed(2));
     } else {
@@ -51,16 +44,33 @@ export default function HomePage() {
   };
 
   const handleUsdChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setUsdValue(value);
+    setEditing("usd");
+    setUsdValue(e.target.value);
 
-    const numericValue = parseFloat(value);
+    const numericValue = parseFloat(usdValue);
     if (!isNaN(numericValue) && typeof rate === "number") {
       setBsValue((numericValue * rate).toFixed(2));
     } else {
       setBsValue("");
     }
   };
+
+  const handleBlur = () => {
+    if (editing === "bs" && rate) {
+      setUsdValue((parseFloat(bsValue) / rate).toFixed(2));
+    }
+    if (editing === "usd" && rate) {
+      setBsValue((parseFloat(usdValue) * rate).toFixed(2));
+    }
+    setEditing(null);
+  };
+
+  useEffect(() => {
+    if (typeof rate === "number") {
+      setBsValue(rate.toFixed(2)); // o formatCurrency(rate, "VES") si prefieres
+      setUsdValue("1");
+    }
+  }, [rate]);
 
   useEffect(() => {
     const storedTheme = localStorage.getItem("theme");
