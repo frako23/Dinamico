@@ -20,8 +20,14 @@ export default function HomePage() {
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
   const { rate } = useCurrencyRates();
-  const [bsValue, setBsValue] = useState("");
-  const [usdValue, setUsdValue] = useState("");
+  const {
+    bsValue,
+    setBsValue,
+    usdValue,
+    setUsdValue,
+    handleBsChange,
+    handleUsdChange,
+  } = useCalculation();
   const [userId, setUserId] = useState<string | null>(null);
   const [openAdd, setOpenAdd] = useState(false);
   const [currentMonth, setCurrentMonth] = useState(() => {
@@ -155,6 +161,7 @@ export default function HomePage() {
           setAccountId={setAccountId}
           openAdd={openAdd}
           setOpenAdd={setOpenAdd}
+          rate={rate ?? undefined}
         />
       )}
     </main>

@@ -45,7 +45,7 @@ function initState(): State {
     return {
       transactions: [],
       categories: [],
-      currency: "Bs",
+      currency: "USD",
       editingId: undefined,
     };
 
@@ -61,7 +61,9 @@ function initState(): State {
     {
       id: "t1",
       type: "income",
-      amount: 25000,
+      amountBs: 25000,
+      amountUsd: 50,
+      rate: 500,
       categoryId: "salary",
       date: "2025-09-01T00:00:00.000Z",
       note: "Nómina",
@@ -70,7 +72,9 @@ function initState(): State {
     {
       id: "t2",
       type: "expense",
-      amount: 1200,
+      amountBs: 1200,
+      amountUsd: 2.4,
+      rate: 500,
       categoryId: "coffee",
       date: "2025-09-10T12:00:00.000Z",
       note: "Cappuccino",
@@ -81,7 +85,7 @@ function initState(): State {
   return {
     transactions: sample,
     categories: defaultCategories,
-    currency: "Bs",
+    currency: "USD",
     editingId: undefined,
   };
 }
@@ -183,7 +187,7 @@ export function useStore(): Store {
     persist({
       transactions: [],
       categories: defaultCategories,
-      currency: "VES",
+      currency: "USD",
       editingId: undefined,
     });
   }, [persist]);
@@ -197,8 +201,8 @@ export function useStore(): Store {
       for (const t of state.transactions) {
         const d = new Date(t.date).getTime();
         if (d < s || d > e) continue;
-        if (t.type === "income") income += t.amount;
-        else expense += t.amount;
+        if (t.type === "income") income += t.amountUsd;
+        else expense += t.amountUsd;
       }
       return { income, expense, balance: income - expense };
     },

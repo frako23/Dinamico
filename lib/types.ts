@@ -1,7 +1,9 @@
 export type Transaction = {
   id: string
   type: "income" | "expense"
-  amount: number
+  amountBs: number
+  amountUsd: number
+  rate: number
   categoryId: string
   date: string // ISO
   note?: string
