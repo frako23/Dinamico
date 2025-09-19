@@ -3,54 +3,23 @@ import { useCurrencyRates } from "./use-currencyRates";
 
 export const useCalculation = () => {
   const { rate } = useCurrencyRates();
-  const [bsValue, setBsValue] = useState<string>("");
-  const [usdValue, setUsdValue] = useState<string>("");
+  const [bsValue, setBsValue] = useState<number | null>(null);
+  const [usdValue, setUsdValue] = useState<number | null>(null);
 
   const handleBsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
+    const value = Number(e.target.value);
+    if (rate === null) return
     setBsValue(value);
-
-    const numericValue = parseFloat(value);
-    if (!isNaN(numericValue) && typeof rate === "number") {
-      setUsdValue((numericValue / rate).toFixed(2));
-    } else {
-      setUsdValue("");
-    }
+      setUsdValue(parseFloat((value / rate).toFixed(2)));
   };
 
   const handleUsdChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
+    const value = Number(e.target.value);
     setUsdValue(value);
+    if (rate === null) return
 
-    const numericValue = parseFloat(value);
-    if (!isNaN(numericValue) && typeof rate === "number") {
-      setBsValue((numericValue * rate).toFixed(2));
-    } else {
-      setBsValue("");
-    }
+    setBsValue(parseFloat((value * rate).toFixed(2)));
   };
-
-  useEffect(() => {
-    if (rate) {
-      if (bsValue) {
-        const usd = parseFloat(bsValue) / rate;
-        setUsdValue(usd.toFixed(2));
-      } else {
-        setUsdValue("");
-      }
-    }
-  }, [bsValue, rate]);
-
-  useEffect(() => {
-    if (rate) {
-      if (usdValue) {
-        const bs = parseFloat(usdValue) * rate;
-        setBsValue(bs.toFixed(2));
-      } else {
-        setBsValue("");
-      }
-    }
-  }, [usdValue, rate]);
 
   return {
     bsValue,

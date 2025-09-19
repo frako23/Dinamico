@@ -26,6 +26,8 @@ export default function HomePage() {
     setBsValue,
     usdValue,
     setUsdValue,
+    handleBsChange,
+    handleUsdChange,
   } = useCalculation();
   const [userId, setUserId] = useState<string | null>(null);
   const [openAdd, setOpenAdd] = useState(false);
@@ -35,47 +37,6 @@ export default function HomePage() {
   });
   const [accountId, setAccountId] = useState<string>("Efectivo");
   const [editing, setEditing] = useState<"bs" | "usd" | null>(null);
-
-  const handleBsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEditing("bs");
-    setBsValue(e.target.value);
-
-    const numericValue = parseFloat(bsValue);
-    if (!isNaN(numericValue) && typeof rate === "number") {
-      setUsdValue((numericValue / rate).toFixed(2));
-    } else {
-      setUsdValue("");
-    }
-  };
-
-  const handleUsdChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEditing("usd");
-    setUsdValue(e.target.value);
-
-    const numericValue = parseFloat(usdValue);
-    if (!isNaN(numericValue) && typeof rate === "number") {
-      setBsValue((numericValue * rate).toFixed(2));
-    } else {
-      setBsValue("");
-    }
-  };
-
-  const handleBlur = () => {
-    if (editing === "bs" && rate) {
-      setUsdValue((parseFloat(bsValue) / rate).toFixed(2));
-    }
-    if (editing === "usd" && rate) {
-      setBsValue((parseFloat(usdValue) * rate).toFixed(2));
-    }
-    setEditing(null);
-  };
-
-  useEffect(() => {
-    if (typeof rate === "number") {
-      setBsValue(rate.toFixed(2)); // o formatCurrency(rate, "VES") si prefieres
-      setUsdValue("1");
-    }
-  }, [rate]);
 
   useEffect(() => {
     const storedTheme = localStorage.getItem("theme");
@@ -88,7 +49,10 @@ export default function HomePage() {
     <main className="mx-auto max-w-3xl pb-24">
       <header className="sticky top-0 z-30 bg-white/80 backdrop-blur supports-[backdrop-filter]:bg-transparent border-b">
         <div className="px-4 py-3 flex items-center justify-between">
-          <div className="text-xl font-bold tracking-tight">Dinámico</div>
+          <div className="text-xl font-bold tracking-tight flex flex-col">
+            <span>Dinámico</span>
+            <span className="text-sm">Bs {rate?.toFixed(2)}</span>
+          </div>
 
           <div className="grid gap-1.5 grid-cols-2 ">
             {/* <Select value={accountId} onValueChange={setAccountId}>
@@ -105,7 +69,7 @@ export default function HomePage() {
             <Input
               type="number"
               placeholder="Bs"
-              value={bsValue}
+              value={bsValue ?? ""}
               onChange={handleBsChange}
             />
             <span className="text-end font-bold">US$:</span>
@@ -113,7 +77,7 @@ export default function HomePage() {
             <Input
               type="number"
               placeholder="USD"
-              value={usdValue}
+              value={usdValue ?? ""}
               onChange={handleUsdChange}
             />
           </div>
