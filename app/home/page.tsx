@@ -57,7 +57,7 @@ export default function HomePage() {
             <span className="text-sm">Bs {rate?.toFixed(2)}</span>
           </div>
 
-          <div className="grid gap-1.5 grid-cols-2 ">
+          <div className="flex gap-2 items-end w-48">
             {/* <Select value={accountId} onValueChange={setAccountId}>
               <SelectTrigger>
                 <SelectValue placeholder="Selecciona una cuenta" />
@@ -68,7 +68,7 @@ export default function HomePage() {
                 <SelectItem value="Efectivo $">Efectivo $</SelectItem>
               </SelectContent>
             </Select> */}
-            <div className="grid gap-1.5">
+            <div className="grid gap-1">
               <Label htmlFor="amount">Monto (VES)</Label>
               <Input
                 id="amount"
@@ -81,7 +81,7 @@ export default function HomePage() {
                 {bsValue ? formatCurrency(Number(bsValue) || 0, "VES") : " "}
               </div>
             </div>
-            <div className="grid gap-1.5">
+            <div className="grid gap-1">
               <Label htmlFor="amount">Monto (US$)</Label>
               <Input
                 id="amount"
