@@ -168,19 +168,19 @@ export function AddTransaction({
       </div>
 
       <div className="grid grid-cols-3 gap-2">
-        <div className="grid gap-1.5">
-          <Label htmlFor="amount">Monto (VES)</Label>
-          <Input
-            id="amount"
-            inputMode="decimal"
-            placeholder="0.00"
-            value={bsValue}
-            onChange={handleBsChange}
-          />
-          <div className="text-xs text-muted-foreground">
-            {bsValue ? formatCurrency(Number(bsValue) || 0, "VES") : " "}
+          <div className="grid gap-1.5">
+            <Label htmlFor="amount">Monto (VES)</Label>
+            <Input
+              id="amount"
+              inputMode="decimal"
+              placeholder="0.00"
+              value={bsValue ?? 0}
+              onChange={handleBsChange}
+            />
+            <div className="text-xs text-muted-foreground">
+              {bsValue ? formatCurrency(Number(bsValue) || 0, "VES") : " "}
+            </div>
           </div>
-        </div>
 
         <div className="grid gap-1.5">
           <Label htmlFor="amount">Monto (US$)</Label>
@@ -188,7 +188,7 @@ export function AddTransaction({
             id="amount"
             inputMode="decimal"
             placeholder="0.00"
-            value={usdValue}
+            value={usdValue ?? 0}
             onChange={handleUsdChange}
           />
           <div className="text-xs text-muted-foreground">
@@ -202,7 +202,7 @@ export function AddTransaction({
             id="rate"
             inputMode="decimal"
             placeholder="0.00"
-            value={rate}
+            value={rate ?? 0}
             disabled
           />
           <div className="text-xs text-muted-foreground">

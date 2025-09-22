@@ -16,6 +16,8 @@ import { HomeContent } from "@/components/home-content";
 import { useCurrencyRates } from "@/hooks/use-currencyRates";
 import { Input } from "@/components/ui/input";
 import { useCalculation } from "@/hooks/use-calculation";
+import { Label } from "@/components/ui/label";
+import { useStore } from "@/lib/store";
 
 export default function HomePage() {
   const [mounted, setMounted] = useState(false);
@@ -37,6 +39,7 @@ export default function HomePage() {
   });
   const [accountId, setAccountId] = useState<string>("Efectivo");
   const [editing, setEditing] = useState<"bs" | "usd" | null>(null);
+  const { transactions, currency, getBalanceForRange } = useStore();
 
   useEffect(() => {
     const storedTheme = localStorage.getItem("theme");
@@ -65,21 +68,34 @@ export default function HomePage() {
                 <SelectItem value="Efectivo $">Efectivo $</SelectItem>
               </SelectContent>
             </Select> */}
-            <span className="text-end font-bold">Bs:</span>
-            <Input
-              type="number"
-              placeholder="Bs"
-              value={bsValue ?? ""}
-              onChange={handleBsChange}
-            />
-            <span className="text-end font-bold">US$:</span>
-
-            <Input
-              type="number"
-              placeholder="USD"
-              value={usdValue ?? ""}
-              onChange={handleUsdChange}
-            />
+            <div className="grid gap-1.5">
+              <Label htmlFor="amount">Monto (VES)</Label>
+              <Input
+                id="amount"
+                inputMode="decimal"
+                placeholder="0.00"
+                value={bsValue ?? 0}
+                onChange={handleBsChange}
+              />
+              <div className="text-xs text-muted-foreground">
+                {bsValue ? formatCurrency(Number(bsValue) || 0, "VES") : " "}
+              </div>
+            </div>
+            <div className="grid gap-1.5">
+              <Label htmlFor="amount">Monto (US$)</Label>
+              <Input
+                id="amount"
+                inputMode="decimal"
+                placeholder="0.00"
+                value={usdValue ?? 0}
+                onChange={handleUsdChange}
+              />
+              <div className="text-xs text-muted-foreground">
+                {usdValue
+                  ? formatCurrency(Number(usdValue) || 0, currency)
+                  : " "}
+              </div>
+            </div>
           </div>
 
           {/* <Button
