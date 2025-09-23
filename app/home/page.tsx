@@ -18,6 +18,7 @@ import { Input } from "@/components/ui/input";
 import { useCalculation } from "@/hooks/use-calculation";
 import { Label } from "@/components/ui/label";
 import { useStore } from "@/lib/store";
+import OneTapComponent from "@/components/auth/OneTapComponent";
 
 export default function HomePage() {
   const [mounted, setMounted] = useState(false);
@@ -56,7 +57,7 @@ export default function HomePage() {
             <span>Dinámico</span>
             <span className="text-sm">Bs {rate?.toFixed(2)}</span>
           </div>
-
+          <OneTapComponent />
           <div className="flex gap-2 items-end w-48">
             {/* <Select value={accountId} onValueChange={setAccountId}>
               <SelectTrigger>
