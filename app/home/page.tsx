@@ -47,6 +47,11 @@ export default function HomePage() {
     document.documentElement.classList.toggle("dark", storedTheme === "dark");
   }, []);
 
+  const rawUser = localStorage.getItem("sb-xbqhslcgfxtbsgmrqdzi-auth-token");
+  const user = rawUser ? JSON.parse(rawUser) : null;
+
+  console.log(user);
+
   const { data, loading, error } = useUserAccount(userId);
 
   return (
@@ -57,7 +62,7 @@ export default function HomePage() {
             <span>Dinámico</span>
             <span className="text-sm">Bs {rate?.toFixed(2)}</span>
           </div>
-          <OneTapComponent />
+          {user ? "" : <OneTapComponent />}
           <div className="flex gap-2 items-end w-48">
             {/* <Select value={accountId} onValueChange={setAccountId}>
               <SelectTrigger>

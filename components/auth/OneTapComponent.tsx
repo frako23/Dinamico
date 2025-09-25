@@ -1,8 +1,8 @@
 "use client";
 
 import Script from "next/script";
-import { createClient } from "@/utils/supabase/client";
 import { useRouter } from "next/navigation";
+import { supabase } from "@/utils/supabase/client";
 
 // Define the type for google.accounts if needed:
 type GoogleAccounts = {
@@ -38,7 +38,6 @@ const generateNonce = async (): Promise<string[]> => {
 };
 
 const OneTapComponent = () => {
-  const supabase = createClient();
   const router = useRouter();
 
   const initializeGoogleOneTap = async () => {
@@ -72,36 +71,6 @@ const OneTapComponent = () => {
           if (error) throw error;
           console.warn("Session data: ", data);
           console.warn("Successfully logged in with Google One Tap");
-
-          // Agregar usuario a la tabla profiles
-          // if (data.user) {
-          //   const { id, email, user_metadata } = data.user;
-          //   const username = user_metadata?.name || "";
-          //   const avatar_url = user_metadata?.avatar_url || "";
-          //   const { error: upsertError } = await supabase
-          //     .from("profiles")
-          //     .insert([
-          //       {
-          //         id,
-          //         username,
-          //         avatar_url,
-          //         role: "user",
-          //         email,
-          //         created_at: new Date().toISOString(),
-          //       },
-          //     ]);
-          //   if (upsertError) {
-          //     console.error(
-          //       "Error upserting user in profiles table",
-          //       upsertError
-          //     );
-          //   } else {
-          //     console.warn("Usuario agregado/actualizado en profiles");
-          //   }
-          // }
-
-          // redirect to protected page
-          router.push("/home");
         } catch (error) {
           console.error("Error logging in with Google One Tap", error);
         }
